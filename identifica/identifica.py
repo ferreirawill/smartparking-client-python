@@ -1,14 +1,35 @@
+from collections import namedtuple
+from skimage.filters import threshold_local
+from skimage import segmentation
+from skimage import measure
+from imutils import perspective
 import numpy as np
 import cv2
 import imutils
 
+
+licence_plate = namedtuple("placa_regiao",["success", "plate", "thresh", "candidates"])
+
+
 class detector:
-    def __init__(self,image,largmin=60,altmin=20):
+    def __init__(self,image,largmin=60,altmin=20,numchar=7,largminchar=40):
         self.image = image
         self.largmin = largmin
         self.altmin = altmin
+        self.numchar = numchar
+        self.largminchar = largminchar
+
 
     def detecta(self):
+        regpl = self.detectaplacas()
+
+        for reg in regpl:
+            lp = self.detectcharcandidates(reg)
+
+            if lp.success:
+                yield (lp, reg)
+
+
         return self.detectaplacas
 
 
@@ -55,6 +76,56 @@ class detector:
                 regions.append(box)
 
         return regions
+
+    def detectcharcandidates(self, region):
+        plate = perspective.four_point_transform(self.image, region)
+        cv2.imshow("Transformação de prespectiva", imutils.resize(plate,width= 400))
+        V = cv2.split(cv2.cvtColor(plate,cv2.COLOR_BGR2HSV))[2]
+        T = threshold_local(V, 29, offset=15, method= "gaussian")
+        thresh = ( V > T).astype("uint8")*255
+        thresh = cv2.bitwise_not(thresh)
+
+        plate = imutils.resize(plate, width=400)
+        thresh = imutils.resize(thresh, width=400)
+        cv2.imshow("Thresh",thresh)
+        labels = measure.label(thresh, neighbors=8, background=0)
+        charCandidates = np.zeros( thresh.shape, dtype = "uint8")
+        for label in np.unique(labels):
+            if label == 0:
+                continue
+
+            labelMask = np.zeros(thresh.shape, dtype="uint8")
+            labelMask[labels == label] = 255
+            cnts = cv2.findContours(labelMask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+            cnts = imutils.grab_contours(cnts)
+
+            if len(cnts) > 0:
+                c = max(cnts, key = cv2.contourArea)
+                (boxX, boxY, boxW, boxH) = cv2.boundingRect(c)
+
+                aspectRatio = boxW / float(boxH)
+                solidity = cv2.contourArea(c) / float(boxW * boxH)
+                heightRatio = boxH / float(plate.shape[0])
+
+
+                keepAspectRatio = aspectRatio < 1.0
+                keepSolidity = solidity > 0.15
+                keepHeight = heightRatio > 0.14 and heightRatio < 0.95
+
+                if keepAspectRatio and keepSolidity and keepHeight:
+                    hull = cv2.convexHull(c)
+                    cv2.drawContours(charCandidates, [hull], -1, 255, -1)
+
+
+            charCandidates = segmentation.clear_border(charCandidates)
+
+        return licence_plate(success=True, plate = plate, thresh=thresh, candidates=charCandidates)
+
+
+
+
+
+
 
 
 

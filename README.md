@@ -52,6 +52,9 @@ Os mínimo de módulos necessários são:
 
 > OpenCV == 3.4.1
 
+> scikit-image==0.14.1
+
+> scikit-learn==0.20.2
 
 
 

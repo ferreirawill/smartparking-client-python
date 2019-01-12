@@ -20,9 +20,15 @@ for imagePath in sorted(list(paths.list_images(dictio["image"]))):
     lpd = detector(image)
     plates = lpd.detectaplacas()
 
-    for lpBox in plates:
+    for (i,(lp, lpBox)) in enumerate(plates):
         lpBox = np.array(lpBox).reshape((-1,1,2)).astype(np.int32)
         cv2.drawContours(image, [lpBox], -1,(0,255,0),2)
 
+        candidates = np.dstack([lp.candidates] * 3)
+        thresh = np.dstack([lp.thresh] * 3)
+        output = np.vstack([lp.plate, thresh, candidates])
+        cv2.imshow("Plate e candidates. # {}".format(i + 1), output)
+
     cv2.imshow("Imagem",image)
     cv2.waitKey(0)
+    cv2.destroyAllWindows()
