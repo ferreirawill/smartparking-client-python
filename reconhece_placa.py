@@ -10,6 +10,7 @@ command = argparse.ArgumentParser()
 command.add_argument("-i","--image", required= True, help="Imagens para detecção")
 dictio = vars(command.parse_args())
 
+
 for imagePath in sorted(list(paths.list_images(dictio["image"]))):
     image = cv2.imread(imagePath)
     print(imagePath)
@@ -18,7 +19,7 @@ for imagePath in sorted(list(paths.list_images(dictio["image"]))):
         image = imutils.resize(image, width=640)
 
     lpd = detector(image)
-    plates = lpd.detectaplacas()
+    plates = lpd.detecta()
 
     for (i,(lp, lpBox)) in enumerate(plates):
         lpBox = np.array(lpBox).reshape((-1,1,2)).astype(np.int32)
