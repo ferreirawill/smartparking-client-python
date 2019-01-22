@@ -23,7 +23,7 @@ for imagePath in sorted(list(paths.list_images(dictio["image"]))):
 
     for(lpBox,chars) in plates:
         for(i, char) in enumerate(chars):
-            cv2.imshow("Character {}".format(i + 1),char)
+            cv2.imshow("Character {}".format(i + 1), char)
 
 
     cv2.imshow("Imagem",image)

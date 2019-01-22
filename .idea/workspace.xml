@@ -1,33 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6e4b39ef-2c03-43bb-9924-7d0b51fecd04" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/identifica/identifica.py" beforeDir="false" afterPath="$PROJECT_DIR$/identifica/identifica.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/TR_Lava_Jato_Foto_Tania_Rego00105242016.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p1.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p10.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p11.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p12.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p13.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p14.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p15.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p16.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p18.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p19.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p2.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p20.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p21.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p3.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p4.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p5.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p6.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p7.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p8.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/imagens/p9.jpeg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/reconhece_placa.py" beforeDir="false" afterPath="$PROJECT_DIR$/reconhece_placa.py" afterDir="false" />
-    </list>
+    <list default="true" id="6e4b39ef-2c03-43bb-9924-7d0b51fecd04" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,11 +10,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/reconhece_placa.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="354">
-              <caret line="26" selection-start-line="26" selection-end-line="26" />
+            <state relative-caret-position="369">
+              <caret line="27" selection-end-line="31" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -48,11 +22,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/identifica/identifica.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="135">
-              <caret line="14" column="58" selection-start-line="14" selection-start-column="58" selection-end-line="14" selection-end-column="58" />
+              <caret line="14" column="58" selection-end-line="190" />
               <folding>
                 <element signature="e#0#34#0" expanded="true" />
               </folding>
@@ -236,22 +210,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/reconhece_placa.py">
+    <entry file="file://$PROJECT_DIR$/identifica/identifica.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="26" selection-start-line="26" selection-end-line="26" />
+        <state relative-caret-position="135">
+          <caret line="14" column="58" selection-end-line="190" />
           <folding>
-            <element signature="e#0#37#0" expanded="true" />
+            <element signature="e#0#34#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/identifica/identifica.py">
+    <entry file="file://$PROJECT_DIR$/reconhece_placa.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="14" column="58" selection-start-line="14" selection-start-column="58" selection-end-line="14" selection-end-column="58" />
+        <state relative-caret-position="369">
+          <caret line="27" selection-end-line="31" />
           <folding>
-            <element signature="e#0#34#0" expanded="true" />
+            <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
