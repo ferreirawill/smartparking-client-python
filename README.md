@@ -4,19 +4,19 @@
 
 Passos para conclusão:
 
--[x] Detecção da placa na imagem
+- [x] Detecção da placa na imagem
 
--[ ] Indentificação dos Caracteres
+- [ ] Indentificação dos Caracteres
 
--[ ] Reconhecimento dos Caracteres
+- [ ] Reconhecimento dos Caracteres
 
--[ ] Estrutura do banco de dados
+- [ ] Estrutura do banco de dados
 
--[ ] Desenvolvimento Banco de dados
+- [ ] Desenvolvimento Banco de dados
 
--[ ] Código de reconhecimento com requisição no banco de dados
+- [ ] Código de reconhecimento com requisição no banco de dados
 
--[ ] Template do WebServer
+- [ ] Template do WebServer
 
 
 
