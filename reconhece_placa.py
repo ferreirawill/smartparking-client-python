@@ -10,6 +10,7 @@ command = argparse.ArgumentParser()
 command.add_argument("-i","--image", required= True, help="Imagens para detecção")
 dictio = vars(command.parse_args())
 
+
 for imagePath in sorted(list(paths.list_images(dictio["image"]))):
     image = cv2.imread(imagePath)
     print(imagePath)
