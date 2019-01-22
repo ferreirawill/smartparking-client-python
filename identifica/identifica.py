@@ -12,7 +12,7 @@ licence_plate = namedtuple("placa_regiao",["success", "plate", "thresh", "candid
 
 
 class detector:
-    def __init__(self,image,largmin=60,altmin=20,numchar=7,largminchar=40):
+    def __init__(self,image,largmin=60,altmin=20,numchar=8,largminchar=40):
         self.image = image
         self.largmin = largmin
         self.altmin = altmin
@@ -27,10 +27,12 @@ class detector:
             lp = self.detectcharcandidates(reg)
 
             if lp.success:
-                yield (lp, reg)
+                chars = self.scissor(lp)
+
+                yield (reg, chars)
 
 
-        return self.detectaplacas
+        #return self.detectaplacas()
 
 
     def detectaplacas(self):
@@ -79,17 +81,17 @@ class detector:
 
     def detectcharcandidates(self, region):
         plate = perspective.four_point_transform(self.image, region)
-        cv2.imshow("Transformação de prespectiva", imutils.resize(plate,width= 400))
+        cv2.imshow("Transformação de prespectiva", imutils.resize(plate, width= 400))
         V = cv2.split(cv2.cvtColor(plate,cv2.COLOR_BGR2HSV))[2]
         T = threshold_local(V, 29, offset=15, method= "gaussian")
-        thresh = ( V > T).astype("uint8")*255
+        thresh = (V > T).astype("uint8")*255
         thresh = cv2.bitwise_not(thresh)
 
         plate = imutils.resize(plate, width=400)
         thresh = imutils.resize(thresh, width=400)
         cv2.imshow("Thresh",thresh)
         labels = measure.label(thresh, neighbors=8, background=0)
-        charCandidates = np.zeros( thresh.shape, dtype = "uint8")
+        charCandidates = np.zeros( thresh.shape, dtype="uint8")
         for label in np.unique(labels):
             if label == 0:
                 continue
@@ -118,11 +120,65 @@ class detector:
 
 
             charCandidates = segmentation.clear_border(charCandidates)
+            cnts = cv2.findContours(charCandidates.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+
+            cnts = imutils.grab_contours(cnts)
+            cv2.imshow("Original candidates",charCandidates)
+
+            if len(cnts) > self.numchar:
+                (charCandidates,cnts) = self.prunecandidates(charCandidates,cnts)
+                cv2.imshow("Pruned Candidates",charCandidates)
+
+            thresh = cv2.bitwise_not(thresh,thresh,mask=charCandidates)
+            cv2.imshow("char threshold",thresh)
 
         return licence_plate(success=True, plate = plate, thresh=thresh, candidates=charCandidates)
 
+    def prunecandidates(self,charCandidates,cnts):
+        prunedCandidates = np.zeros(charCandidates.shape,dtype="uint8")
+        dims = []
+        for c in cnts:
+            (boxX,boxY,boxW,boxH) = cv2.boundingRect(c)
+            dims.append(boxY+boxH)
+
+        dims = np.array(dims)
+        diffs = []
+        selected = []
+
+        for i in range(0,len(dims)):
+            diffs.append(np.absolute(dims - dims[i]).sum())
+
+        for i in np.argsort(diffs)[:self.numchar]:
+
+            cv2.drawContours(prunedCandidates,[cnts[i]],-1,255,-1)
+            selected.append(cnts[i])
+
+        return (prunedCandidates,selected)
 
 
+    def scissor(self,lp):
+        cnts = cv2.findContours(lp.candidates.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+        cnts = imutils.grab_contours(cnts)
+
+        boxes = []
+        chars = []
+
+        for c in cnts:
+
+            (boxX, boxY, boxW, boxH) = cv2.boundingRect(c)
+            dX = min(self.largminchar,self.largminchar - boxW) // 2
+            boxX -= dX
+            boxW +=(dX * 2)
+
+            boxes.append((boxX, boxY, boxX + boxW, boxY + boxH))
+
+        boxes = sorted(boxes, key=lambda b:b[0])
+
+        for (startX, startY, endX, endY) in boxes:
+
+            chars.append(lp.thresh[startY:endY, startX:endX])
+
+        return chars
 
 
 
