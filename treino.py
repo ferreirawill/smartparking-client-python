@@ -14,6 +14,7 @@ command.add_argument("-c","--char",required=True,help="Caminho onde será salvo 
 command.add_argument("-n","--num",required=True,help="Caminho onde será salvo o treino de numeros")
 dictio = vars(command.parse_args())
 print(dictio)
+
 alphabet = "abcdefghijklmnopqrstuvwxyz0123456789"
 
 alphadata = []
@@ -36,6 +37,7 @@ for fontpath in paths.list_images(dictio["fonts"]):
 
 
     for (i,c) in enumerate(cnts):
+        #print("Valor de i: {} | letra equivalente: {}".format(i,alphabet[i]))
         (x,y,w,h) = cv2.boundingRect(c)
         roi = thresh[y:y + h, x:x + w]
         features = desc.describe(roi)
@@ -43,10 +45,11 @@ for fontpath in paths.list_images(dictio["fonts"]):
         if i < 26:
             alphadata.append(features)
             alphalabel.append(alphabet[i])
-        else:
+            print("ALPHALABEL: {}".format(alphalabel))
+        elif i <36:
             numdata.append(features)
-            numlabel.append(features[i])
-
+            numlabel.append(alphabet[i])
+            print("numlabel: {}".format(numlabel))
 
 
 print("[INFO] Criando modelo de caracteres...")
