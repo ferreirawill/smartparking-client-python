@@ -45,20 +45,20 @@ for fontpath in paths.list_images(dictio["fonts"]):
         if i < 26:
             alphadata.append(features)
             alphalabel.append(alphabet[i])
-            print("ALPHALABEL: {}".format(alphalabel))
+            #print("ALPHALABEL: {}".format(alphalabel))
         elif i <36:
             numdata.append(features)
             numlabel.append(alphabet[i])
-            print("numlabel: {}".format(numlabel))
+            #print("numlabel: {}".format(numlabel))
 
 
 print("[INFO] Criando modelo de caracteres...")
-charmodel = LinearSVC(C=1.0,random_state=42)
+charmodel = LinearSVC(C=1.0,random_state=42,max_iter=1319)
 charmodel.fit(alphadata, alphalabel)
 
 print("[INFO] Finalizando modelo de caracteres...")
 f = open(dictio["char"],"wb")
-f.write(pickle.dump(charmodel))
+f.write(pickle.dumps(charmodel))
 f.close()
 
 print("[INFO] Criando modelo de numeros...")
@@ -69,6 +69,6 @@ nummodel.fit(numdata, numlabel)
 
 print("[INFO] Finalizando modelo de numeros...")
 f = open(dictio["num"],"wb")
-f.write(pickle.dump(nummodel))
+f.write(pickle.dumps(nummodel))
 f.close()
 

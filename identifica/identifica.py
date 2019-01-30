@@ -180,8 +180,8 @@ class detector:
 
         return chars
 
-
-
+    @staticmethod
+    def preprocessChar(char):
 
 
 

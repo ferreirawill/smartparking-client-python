@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6e4b39ef-2c03-43bb-9924-7d0b51fecd04" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identifica/identifica.py" beforeDir="false" afterPath="$PROJECT_DIR$/identifica/identifica.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/treino.py" beforeDir="false" afterPath="$PROJECT_DIR$/treino.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -37,11 +38,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/treino.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="204">
-              <caret line="55" column="27" selection-start-line="55" selection-start-column="27" selection-end-line="55" selection-end-column="27" />
+              <caret line="55" column="57" selection-start-line="55" selection-start-column="57" selection-end-line="55" selection-end-column="57" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -49,11 +50,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/identifica/identifica.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="38" lean-forward="true" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
+            <state relative-caret-position="309">
+              <caret line="182" column="17" selection-start-line="182" selection-start-column="17" selection-end-line="182" selection-end-column="17" />
               <folding>
                 <element signature="e#0#34#0" expanded="true" />
               </folding>
@@ -86,14 +87,14 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/identifica/identifica.py" />
         <option value="$PROJECT_DIR$/reconhece_placa.py" />
         <option value="$PROJECT_DIR$/reconhece/reconhece.py" />
         <option value="$PROJECT_DIR$/treino.py" />
+        <option value="$PROJECT_DIR$/identifica/identifica.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="4">
     <option name="x" value="683" />
     <option name="y" value="25" />
     <option name="width" value="683" />
@@ -184,7 +185,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="25" width="1366" height="700" extended-state="6" />
+    <frame x="683" y="25" width="683" height="700" extended-state="4" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" weight="0.13030303" />
@@ -256,22 +257,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/identifica/identifica.py">
+    <entry file="file://$PROJECT_DIR$/treino.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="38" lean-forward="true" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
+        <state relative-caret-position="204">
+          <caret line="55" column="57" selection-start-line="55" selection-start-column="57" selection-end-line="55" selection-end-column="57" />
           <folding>
-            <element signature="e#0#34#0" expanded="true" />
+            <element signature="e#0#37#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/treino.py">
+    <entry file="file://$PROJECT_DIR$/identifica/identifica.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="55" column="27" selection-start-line="55" selection-start-column="27" selection-end-line="55" selection-end-column="27" />
+        <state relative-caret-position="309">
+          <caret line="182" column="17" selection-start-line="182" selection-start-column="17" selection-end-line="182" selection-end-column="17" />
           <folding>
-            <element signature="e#0#37#0" expanded="true" />
+            <element signature="e#0#34#0" expanded="true" />
           </folding>
         </state>
       </provider>
