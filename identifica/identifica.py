@@ -182,6 +182,16 @@ class detector:
 
     @staticmethod
     def preprocessChar(char):
+        cnts = cv2.findContours(char.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+        cnts = imutils.grab_contours(cnts)
+        if len(cnts) == 0:
+            return None
+        c = max(cnts,key=cv2.contourArea)
+        (x, y, w, h) = cv2.boundingRect(c)
+        char = char[y:y + h, x:x +w]
+
+        return char
+
 
 
 
