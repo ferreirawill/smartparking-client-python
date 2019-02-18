@@ -7,6 +7,8 @@ import pickle
 import argparse
 import imutils
 import cv2
+import sys
+
 
 command = argparse.ArgumentParser()
 command.add_argument("-i","--image", required= True, help="Imagens para detecção")
@@ -15,8 +17,8 @@ command.add_argument("-n","--num", required= True, help="num para para detecçã
 
 dictio = vars(command.parse_args())
 
-charModel = pickle.loads(open(dictio["char"],"rb").read())
-numModel = pickle.loads(open(dictio["num"],"rb").read())
+charModel = pickle.loads(open(dictio["char"],"rb").read(), encoding= 'latin1')
+numModel = pickle.loads(open(dictio["num"],"rb").read(), encoding= 'latin1')
 
 blockSizes = ((5,5), (5,10), (10,5), (10,10))
 desc = bbps(targetsize=(30,15), blocksizes=blockSizes)
@@ -51,7 +53,7 @@ for imagePath in sorted(list(paths.list_images(dictio["image"]))):
             else:
                 prediction = numModel.predict(features)[0]
 
-            text +=prediction.upper()
+            text += prediction.upper().decode('utf-8')
 
             if len(chars) >0:
                 M = cv2.moments(lpBox)

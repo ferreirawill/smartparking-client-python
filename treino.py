@@ -28,17 +28,17 @@ desc = bbps(targetsize=(30,15),blocksizes=blocksizes)
 
 for fontpath in paths.list_images(dictio["fonts"]):
     font = cv2.imread(fontpath)
-    font = cv2.cvtColor(font,cv2.COLOR_BGR2GRAY)
-    thresh = cv2.threshold(font,128,255,cv2.THRESH_BINARY_INV)[1]
+    font = cv2.cvtColor(font, cv2.COLOR_BGR2GRAY)
+    thresh = cv2.threshold(font, 128, 255, cv2.THRESH_BINARY_INV)[1]
 
-    cnts = cv2.findContours(thresh.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
-    cnts = sorted(cnts,key = lambda c:(cv2.boundingRect(c)[0] + cv2.boundingRect(c)[1]))
+    cnts = sorted(cnts, key=lambda c:(cv2.boundingRect(c)[0] + cv2.boundingRect(c)[1]))
 
 
     for (i,c) in enumerate(cnts):
         #print("Valor de i: {} | letra equivalente: {}".format(i,alphabet[i]))
-        (x,y,w,h) = cv2.boundingRect(c)
+        (x, y, w, h) = cv2.boundingRect(c)
         roi = thresh[y:y + h, x:x + w]
         features = desc.describe(roi)
 
@@ -53,7 +53,7 @@ for fontpath in paths.list_images(dictio["fonts"]):
 
 
 print("[INFO] Criando modelo de caracteres...")
-charmodel = LinearSVC(C=1.0,random_state=42,max_iter=1319)
+charmodel = LinearSVC(C=1.0,random_state=42,max_iter=1500)
 charmodel.fit(alphadata, alphalabel)
 
 print("[INFO] Finalizando modelo de caracteres...")
@@ -62,7 +62,7 @@ f.write(pickle.dumps(charmodel))
 f.close()
 
 print("[INFO] Criando modelo de numeros...")
-nummodel = LinearSVC(C=1.0,random_state=42)
+nummodel = LinearSVC(C=1.0,random_state=42, max_iter = 1500)
 nummodel.fit(numdata, numlabel)
 
 

@@ -6,9 +6,11 @@ Passos para conclusão:
 
 - [x] Detecção da placa na imagem
 
-- [ ] Indentificação dos Caracteres
+- [x] Indentificação dos Caracteres
 
 - [ ] Reconhecimento dos Caracteres
+
+- [ ] Obtenção da imagem via camera IP
 
 - [ ] Estrutura do banco de dados
 
@@ -37,11 +39,11 @@ Links:
 
 # Relatório de atualização
 
-**11/01/2019**
+**11/01/2019** :arrow_right:
 Código de detecção de placas funcionando corretamente, é necessário definir como será posicionada a câmera que irá capturar a imagem ou melhorar a detecção para evitar alguns erros
 
 Os mínimo de módulos necessários são:
-
+```
 > imutils==0.5.2
 
 > numpy==1.15.4
@@ -55,9 +57,27 @@ Os mínimo de módulos necessários são:
 > scikit-image==0.14.1
 
 > scikit-learn==0.20.2
+```
+Para vizualizar os pacotes instalados no ambiente virtual, basta fazer:
+```
+pip freeze
+```
 
+**16/02/2019**  :arrow_right:
+Foi feito um downgrade na biblioteca scikit-learn para a versão 0.17. A versão mais atual (0.20.2) tem problemas para abrir os treinamentos e falhas na convergência dos cálculos.
 
+Para fazer downgrade foram utilizados os comandos:
+```
+$ pip uninstall scikit-learn
+$ pip install scikit-learn==0.17
+``` 
+Depois de instalada, para confirmar a instalação
+```
+$ python
+```
 
-
-
-
+```Python
+>>> import sklearn
+>>> sklearn.__version__
+0.17
+```
