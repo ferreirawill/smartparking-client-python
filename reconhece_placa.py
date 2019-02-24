@@ -67,6 +67,6 @@ for imagePath in sorted(list(paths.list_images(dictio["image"]))):
             #cv2.imshow("Character {}".format(i + 1), char)
 
 
-    cv2.imshow("Imagem",image)
+    #cv2.imshow("Imagem",image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()

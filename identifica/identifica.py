@@ -1,85 +1,125 @@
-from collections import namedtuple
+from collections import namedtuple  # Cria uma tupla com um nome definido
 from skimage.filters import threshold_local
 from skimage import segmentation
 from skimage import measure
 from imutils import perspective
-import numpy as np
-import cv2
-import imutils
+import numpy as np #Modulo de algebra linear do Python
+import cv2 #Modulo de processamento de imagem em python
+import imutils #Modulo para manipulacao de imagem em python
 
-
+# Define uma tupla nomeada "placa_regiao" com parametros relativos a placa
+# Semelhante a um struct c/c++, define um tipo de dados
 licence_plate = namedtuple("placa_regiao",["success", "plate", "thresh", "candidates"])
+#success = true or false se região detectada ou não
+#plate = imagem da placa detectada
+#thresh = threshold da imagem
+#candidates = lista de caracteres da placa
 
-
+# classe responsavel por detectar, extrair e reconhecer os caracteres da placa
 class detector:
-    def __init__(self,image,largmin=60,altmin=20,numchar=8,largminchar=40):
-        self.image = image
-        self.largmin = largmin
-        self.altmin = altmin
-        self.numchar = numchar
-        self.largminchar = largminchar
+    # Construtor da classe
+    def __init__(self,image,largmin=60,altmin=20,numchar=7,largminchar=40):
+        self.image = image     # Recebe a imagem 
+        self.largmin = largmin # Recebe a largura minima da placa
+        self.altmin = altmin   # Recebe a altura minima da placa 
+        self.numchar = numchar # Recebe o numero de caracteres da placa
+        self.largminchar = largminchar # Recebe a largura minima de um caracter
 
 
+    # Método principal para reconhecimento de placas
     def detecta(self):
-        regpl = self.detectaplacas()
-
+        # Chama metodo para detectar placa na imagem
+        regpl = self.detectaplacas() 
+        
+        # Faz um loop sobre toda regiao da placa
         for reg in regpl:
+            # Chama metodo para detectar possiveis caracteres    
             lp = self.detectcharcandidates(reg)
 
+            # Se for detectada uma placa
             if lp.success:
+                # Chama metodo de corte de caracteres
                 chars = self.scissor(lp)
-
+                # retorna uma tupla a regiao e os caracteres
                 yield (reg, chars)
 
 
         #return self.detectaplacas()
 
-
+# Metodo responsavel por detectar a placa em uma imagem
     def detectaplacas(self):
+        # Cria um kernel retangular que deslizara pela imagem ate encontrar uma placa
         rectKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (13,5))
+        # Cria kernel quadrado que limpara os ruidos na imagem
         squareKernel = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
+        # Cria lista com delimitação da placa
         regions=[]
-
+        #cv2.imshow("Imagem original",self.image)
+        # Converte imagem para cinza 
         gray = cv2.cvtColor(self.image,cv2.COLOR_BGR2GRAY)
+        #cv2.MORPH_BLACKHAT revela regiões mais escuras na imagem
+        #tudo que for preto será destacado
         blackhat = cv2.morphologyEx(gray, cv2. MORPH_BLACKHAT, rectKernel)
+        #cv2.imshow("BLACKHAT", blackhat)
 
+        #cv2.MORPH_CLOSE retira ruidos
         light = cv2.morphologyEx(gray, cv2.MORPH_CLOSE, squareKernel)
         #cv2.imshow("gray", gray)
+        # threshold binariza a imagem, pixel > 50 recebe valor 255
+        # metodo cv2.threshold retorna uma lista com dois parametros: erro medio e imagem binarizada
+        # light recebe binarizacao das partes escuras e claras da imagem
         light = cv2.threshold(light, 50, 255, cv2.THRESH_BINARY)[1]
-        #cv2.imshow("thresh", light)
-        gradX = cv2.Sobel(blackhat, ddepth= cv2.CV_32F
-                    if imutils.is_cv2() else cv2.CV_32F,dx=1,dy=0,ksize =-1)
+        #Aplica filtro de sobel para destacar o que não é preto no branco
+        gradX = cv2.Sobel(blackhat, ddepth=cv2.CV_32F,dx=1,dy=0,ksize =-1)
         gradX = np.absolute(gradX)
         (minVal, maxVal) = (np.min(gradX), np.max(gradX))
         gradX = (255 * ((gradX - minVal) / (maxVal - minVal))).astype("uint8")
-
+        
+        #cv2.imshow("CV_32 Normalizado", gradX) 
+        
+        # Desfoca imagem para tirar destaque de pequenos pixels deixado pelo sobel
         gradX = cv2.GaussianBlur(gradX,(5,5),0)
+        #cv2.imshow("gradX", gradX)
+        # Morph_close força a retirada de ruidos deixado pelo sobel
         gradX = cv2.morphologyEx(gradX, cv2.MORPH_CLOSE, rectKernel)
+        #cv2.imshow("morph_close", gradX)
+        # OTSU threshold encontra o melhor valor entre os picos do histograma
         thresh = cv2.threshold(gradX, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
-
+        #cv2.imshow("thresh", thresh)
+        # Operaçoes para de erosao e dilatacao para retirar blocos indesejados e expandir o quadrado da placa
         thresh = cv2.erode(thresh, None, iterations=2)
         thresh = cv2.dilate(thresh, None, iterations=2)
+        #cv2.imshow("eroded and dilated", thresh)
+        # Realiza um and na imagem thresh com ela mesma e usa como mascara o tresh_inv light
         thresh = cv2.bitwise_and(thresh, thresh, mask=light)
         thresh = cv2.dilate(thresh, None, iterations=2)
-        thresh = cv2.erode(thresh, None, iterations=1)
-        cv2.imshow("thresh", thresh)
+        thresh = cv2.erode(thresh, None, iterations=2)
+        #cv2.imshow("finalizada", thresh) 
+        
+        # Encontra os contronos da imagem
         cnts = cv2.findContours(thresh.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
-
+        
         for c in cnts:
+            # Pega altura e largura do retangulo
             (w,h) = cv2.boundingRect(c)[2:]
+            # calcula a relação entre altura e largura
             aspectRatio = w / float(h)
+            
 
             rect = cv2.minAreaRect(c)
-
             box = np.int0(cv2.boxPoints(rect))
-
+            
             if(aspectRatio > 3 and aspectRatio < 6) and h > self.altmin and w > self.largmin:
+                # Coloca as cordenadas da placa num array 
                 regions.append(box)
+
+
 
         return regions
 
     def detectcharcandidates(self, region):
+        
         plate = perspective.four_point_transform(self.image, region)
         cv2.imshow("Transformação de prespectiva", imutils.resize(plate, width= 400))
         V = cv2.split(cv2.cvtColor(plate,cv2.COLOR_BGR2HSV))[2]
@@ -123,14 +163,14 @@ class detector:
             cnts = cv2.findContours(charCandidates.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
 
             cnts = imutils.grab_contours(cnts)
-            cv2.imshow("Original candidates",charCandidates)
+            #cv2.imshow("Original candidates",charCandidates)
 
             if len(cnts) > self.numchar:
                 (charCandidates,cnts) = self.prunecandidates(charCandidates,cnts)
-                cv2.imshow("Pruned Candidates",charCandidates)
+                #cv2.imshow("Pruned Candidates",charCandidates)
 
             thresh = cv2.bitwise_not(thresh,thresh,mask=charCandidates)
-            cv2.imshow("char threshold",thresh)
+            #cv2.imshow("char threshold",thresh)
 
         return licence_plate(success=True, plate = plate, thresh=thresh, candidates=charCandidates)
 
