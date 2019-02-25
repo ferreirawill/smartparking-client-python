@@ -2,7 +2,7 @@ from collections import namedtuple  # Cria uma tupla com um nome definido
 from skimage.filters import threshold_local
 from skimage import segmentation
 from skimage import measure
-from imutils import perspective
+from imutils import perspective # Classse para fazer a transformação de perspectiva das imagens
 import numpy as np #Modulo de algebra linear do Python
 import cv2 #Modulo de processamento de imagem em python
 import imutils #Modulo para manipulacao de imagem em python
@@ -119,17 +119,28 @@ class detector:
         return regions
 
     def detectcharcandidates(self, region):
-        
+        # Redimensiona a imagem aproximando a região da placa
         plate = perspective.four_point_transform(self.image, region)
         cv2.imshow("Transformação de prespectiva", imutils.resize(plate, width= 400))
-        V = cv2.split(cv2.cvtColor(plate,cv2.COLOR_BGR2HSV))[2]
-        T = threshold_local(V, 29, offset=15, method= "gaussian")
+        
+        # Extrai o componente V do espaço de cores HSV 
+        HSV = cv2.cvtColor(plate,cv2.COLOR_BGR2HSV)
+        V = cv2.split(HSV)[2] # H = 0, S = 1, V =2
+        #T = cv2.threshold(V, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+        
+        #Se o pixel tiver uma intensidade maior que o threshold local o valor V sobressai
+        T = threshold_local(V, 19, offset=15, method= "gaussian")
         thresh = (V > T).astype("uint8")*255
         thresh = cv2.bitwise_not(thresh)
+        #thresh = cv2.erode(thresh, (2,2), iterations=1)
+        #thresh = cv2.dilate(thresh, (2,2), iterations=1)
+        #cv2.imshow("bitwise_not", thresh)
 
         plate = imutils.resize(plate, width=400)
         thresh = imutils.resize(thresh, width=400)
         cv2.imshow("Thresh",thresh)
+        
+        # Tecnica "connected component labeling" para encontrar a forma da letra
         labels = measure.label(thresh, neighbors=8, background=0)
         charCandidates = np.zeros( thresh.shape, dtype="uint8")
         for label in np.unique(labels):
