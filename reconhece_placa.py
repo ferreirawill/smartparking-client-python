@@ -11,21 +11,22 @@ import sys
 
 
 command = argparse.ArgumentParser()
-command.add_argument("-i","--image", required= True, help="Imagens para detecção")
-command.add_argument("-c","--char", required= True, help="char para para detecção")
-command.add_argument("-n","--num", required= True, help="num para para detecção")
+command.add_argument("-i","--image", help="Imagens para deteccao")
 
 dictio = vars(command.parse_args())
+print(dictio)
 
-charModel = pickle.loads(open(dictio["char"],"rb").read(), encoding= 'latin1')
-numModel = pickle.loads(open(dictio["num"],"rb").read(), encoding= 'latin1')
+charModel_dire =  "/home/william/PycharmProjects/lpr_course/improving_classifier/output/adv_char.cpickle" 
+numModel_dire = "/home/william/PycharmProjects/lpr_course/improving_classifier/output/adv_digit.cpickle" 
+
+charModel = pickle.loads(open(charModel_dire,"rb").read(), encoding= 'latin1')
+numModel = pickle.loads(open(numModel_dire,"rb").read(), encoding= 'latin1')
 
 blockSizes = ((5,5), (5,10), (10,5), (10,10))
 desc = bbps(targetsize=(30,15), blocksizes=blockSizes)
 
-for imagePath in sorted(list(paths.list_images(dictio["image"]))):
 
-    print(imagePath[imagePath.rfind("/") + 1:])
+for imagePath in sorted(list(paths.list_images(dictio["image"]))):
     image = cv2.imread(imagePath)
 
 
@@ -46,27 +47,22 @@ for imagePath in sorted(list(paths.list_images(dictio["image"]))):
             char = detector.preprocessChar(char)
             if char is None:
                 continue
-            features = desc.describe(char).reshape(1,-1)
+            features = desc.describe(char).reshape(1, -1)
 
-            if i<3:
+            if i < 3:
                 prediction = charModel.predict(features)[0]
             else:
                 prediction = numModel.predict(features)[0]
 
             text += prediction.upper().decode('utf-8')
-
-            if len(chars) >0:
-                M = cv2.moments(lpBox)
-                cX = int(M["m10"] / M["m00"])
-                cY = int(M["m01"] / M["m00"])
-
-            cv2.drawContours(image,lpBox,-1,(0,255,0),2)
-            cv2.putText(image,text,(cX - (cX // 5), cY -30), cv2.FONT_HERSHEY_SIMPLEX,1.0,(0,0,255),2)
+            
 
 
             #cv2.imshow("Character {}".format(i + 1), char)
 
 
-    #cv2.imshow("Imagem",image)
+    cv2.imshow("Imagem",image)
+    print("For image: {} , the plate is: {}".format((imagePath[imagePath.rfind("/") + 1:]),text))
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+#'''

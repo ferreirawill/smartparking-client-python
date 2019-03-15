@@ -49,17 +49,17 @@ class detector:
 # Metodo responsavel por detectar a placa em uma imagem
     def detectaplacas(self):
         # Cria um kernel retangular que deslizara pela imagem ate encontrar uma placa
-        rectKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (13,5))
+        rectKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (13, 5))
         # Cria kernel quadrado que limpara os ruidos na imagem
-        squareKernel = cv2.getStructuringElement(cv2.MORPH_RECT,(3,3))
+        squareKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
         # Cria lista com delimitação da placa
-        regions=[]
+        regions = []
         #cv2.imshow("Imagem original",self.image)
         # Converte imagem para cinza 
-        gray = cv2.cvtColor(self.image,cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         #cv2.MORPH_BLACKHAT revela regiões mais escuras na imagem
         #tudo que for preto será destacado
-        blackhat = cv2.morphologyEx(gray, cv2. MORPH_BLACKHAT, rectKernel)
+        blackhat = cv2.morphologyEx(gray, cv2.MORPH_BLACKHAT, rectKernel)
         #cv2.imshow("BLACKHAT", blackhat)
 
         #cv2.MORPH_CLOSE retira ruidos
@@ -78,7 +78,7 @@ class detector:
         #cv2.imshow("CV_32 Normalizado", gradX) 
         
         # Desfoca imagem para tirar destaque de pequenos pixels deixado pelo sobel
-        gradX = cv2.GaussianBlur(gradX,(5,5),0)
+        gradX = cv2.GaussianBlur(gradX, (5, 5), 0)
         #cv2.imshow("gradX", gradX)
         # Morph_close força a retirada de ruidos deixado pelo sobel
         gradX = cv2.morphologyEx(gradX, cv2.MORPH_CLOSE, rectKernel)
@@ -93,16 +93,16 @@ class detector:
         # Realiza um and na imagem thresh com ela mesma e usa como mascara o tresh_inv light
         thresh = cv2.bitwise_and(thresh, thresh, mask=light)
         thresh = cv2.dilate(thresh, None, iterations=2)
-        thresh = cv2.erode(thresh, None, iterations=2)
+        thresh = cv2.erode(thresh, None, iterations=1)
         #cv2.imshow("finalizada", thresh) 
         
         # Encontra os contronos da imagem
-        cnts = cv2.findContours(thresh.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
         
         for c in cnts:
             # Pega altura e largura do retangulo
-            (w,h) = cv2.boundingRect(c)[2:]
+            (w, h) = cv2.boundingRect(c)[2:]
             # calcula a relação entre altura e largura
             aspectRatio = w / float(h)
             
@@ -110,7 +110,7 @@ class detector:
             rect = cv2.minAreaRect(c)
             box = np.int0(cv2.boxPoints(rect))
             
-            if(aspectRatio > 3 and aspectRatio < 6) and h > self.altmin and w > self.largmin:
+            if (aspectRatio > 3 and aspectRatio < 6) and h > self.altmin and w > self.largmin:
                 # Coloca as cordenadas da placa num array 
                 regions.append(box)
 
@@ -121,16 +121,15 @@ class detector:
     def detectcharcandidates(self, region):
         # Redimensiona a imagem aproximando a região da placa
         plate = perspective.four_point_transform(self.image, region)
-        cv2.imshow("Transformação de prespectiva", imutils.resize(plate, width= 400))
+        #cv2.imshow("Transformação de prespectiva", imutils.resize(plate, width= 400))
         
         # Extrai o componente V do espaço de cores HSV 
-        HSV = cv2.cvtColor(plate,cv2.COLOR_BGR2HSV)
-        V = cv2.split(HSV)[2] # H = 0, S = 1, V =2
+        V = cv2.split(cv2.cvtColor(plate, cv2.COLOR_BGR2HSV))[2]
+        #V = cv2.split(HSV)[2] # H = 0, S = 1, V =2
         #T = cv2.threshold(V, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-        
         #Se o pixel tiver uma intensidade maior que o threshold local o valor V sobressai
-        T = threshold_local(V, 19, offset=15, method= "gaussian")
-        thresh = (V > T).astype("uint8")*255
+        T = threshold_local(V, 29, offset=15, method="gaussian")
+        thresh = (V > T).astype("uint8") * 255
         thresh = cv2.bitwise_not(thresh)
         #thresh = cv2.erode(thresh, (2,2), iterations=1)
         #thresh = cv2.dilate(thresh, (2,2), iterations=1)
@@ -138,22 +137,21 @@ class detector:
 
         plate = imutils.resize(plate, width=400)
         thresh = imutils.resize(thresh, width=400)
-        cv2.imshow("Thresh",thresh)
+        #cv2.imshow("Thresh",thresh)
         
         # Tecnica "connected component labeling" para encontrar a forma da letra
         labels = measure.label(thresh, neighbors=8, background=0)
-        charCandidates = np.zeros( thresh.shape, dtype="uint8")
+        charCandidates = np.zeros(thresh.shape, dtype="uint8")
         for label in np.unique(labels):
             if label == 0:
                 continue
-
             labelMask = np.zeros(thresh.shape, dtype="uint8")
             labelMask[labels == label] = 255
-            cnts = cv2.findContours(labelMask,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+            cnts = cv2.findContours(labelMask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             cnts = imutils.grab_contours(cnts)
 
             if len(cnts) > 0:
-                c = max(cnts, key = cv2.contourArea)
+                c = max(cnts, key=cv2.contourArea)
                 (boxX, boxY, boxW, boxH) = cv2.boundingRect(c)
 
                 aspectRatio = boxW / float(boxH)
@@ -163,7 +161,7 @@ class detector:
 
                 keepAspectRatio = aspectRatio < 1.0
                 keepSolidity = solidity > 0.15
-                keepHeight = heightRatio > 0.14 and heightRatio < 0.95
+                keepHeight = heightRatio > 0.4 and heightRatio < 0.95
 
                 if keepAspectRatio and keepSolidity and keepHeight:
                     hull = cv2.convexHull(c)
@@ -171,44 +169,47 @@ class detector:
 
 
             charCandidates = segmentation.clear_border(charCandidates)
-            cnts = cv2.findContours(charCandidates.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+            cnts = cv2.findContours(charCandidates.copy(), cv2.RETR_EXTERNAL,
+             cv2.CHAIN_APPROX_SIMPLE)
 
             cnts = imutils.grab_contours(cnts)
             #cv2.imshow("Original candidates",charCandidates)
+        if len(cnts) > self.numchar:
+            (charCandidates, cnts) = self.prunecandidates(charCandidates, cnts)
+            #cv2.imshow("Pruned Candidates",charCandidates)
+        
+        return licence_plate(success=len(cnts) == self.numchar, plate=plate, thresh=thresh, candidates=charCandidates)
 
-            if len(cnts) > self.numchar:
-                (charCandidates,cnts) = self.prunecandidates(charCandidates,cnts)
-                #cv2.imshow("Pruned Candidates",charCandidates)
-
-            thresh = cv2.bitwise_not(thresh,thresh,mask=charCandidates)
+            #thresh = cv2.bitwise_not(thresh, thresh, mask=charCandidates)
             #cv2.imshow("char threshold",thresh)
 
-        return licence_plate(success=True, plate = plate, thresh=thresh, candidates=charCandidates)
+        
 
     def prunecandidates(self,charCandidates,cnts):
-        prunedCandidates = np.zeros(charCandidates.shape,dtype="uint8")
+        prunedCandidates = np.zeros(charCandidates.shape, dtype="uint8")
         dims = []
         for c in cnts:
-            (boxX,boxY,boxW,boxH) = cv2.boundingRect(c)
-            dims.append(boxY+boxH)
+            (boxX, boxY, boxW, boxH) = cv2.boundingRect(c)
+            dims.append(boxY + boxH)
 
         dims = np.array(dims)
         diffs = []
         selected = []
 
-        for i in range(0,len(dims)):
+        for i in range(0, len(dims)):
             diffs.append(np.absolute(dims - dims[i]).sum())
 
         for i in np.argsort(diffs)[:self.numchar]:
 
-            cv2.drawContours(prunedCandidates,[cnts[i]],-1,255,-1)
+            cv2.drawContours(prunedCandidates, [cnts[i]], -1, 255, -1)
             selected.append(cnts[i])
 
-        return (prunedCandidates,selected)
+        return (prunedCandidates, selected)
 
 
     def scissor(self,lp):
-        cnts = cv2.findContours(lp.candidates.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+        cnts = cv2.findContours(lp.candidates.copy(), cv2.RETR_EXTERNAL,
+         cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
 
         boxes = []
@@ -219,7 +220,7 @@ class detector:
             (boxX, boxY, boxW, boxH) = cv2.boundingRect(c)
             dX = min(self.largminchar,self.largminchar - boxW) // 2
             boxX -= dX
-            boxW +=(dX * 2)
+            boxW += (dX * 2)
 
             boxes.append((boxX, boxY, boxX + boxW, boxY + boxH))
 
@@ -233,19 +234,12 @@ class detector:
 
     @staticmethod
     def preprocessChar(char):
-        cnts = cv2.findContours(char.copy(),cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+        cnts = cv2.findContours(char.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
         if len(cnts) == 0:
             return None
-        c = max(cnts,key=cv2.contourArea)
+        c = max(cnts, key=cv2.contourArea)
         (x, y, w, h) = cv2.boundingRect(c)
-        char = char[y:y + h, x:x +w]
+        char = char[y:y + h, x:x + w]
 
         return char
-
-
-
-
-
-
-
