@@ -19,7 +19,7 @@ headers = {
 url = "http://127.0.0.1:8000/api/entrada/"
 img = 'jhafqewuoh93r8h12093uawhflkwerh930hwewqehr'
 text = ""
-
+justplate = ''
 command = argparse.ArgumentParser()
 command.add_argument("-i","--image", help="Imagem para deteccao")
 
@@ -43,14 +43,7 @@ if image.shape[1] > 640:
 
 lpd = detector(image,numchar=7)
 plates = lpd.detecta()
-
-
-for(lpBox,chars) in plates:
-
-    lpBox = np.array(lpBox).reshape((-1,1,2)).astype(np.int32)
-
-  
-
+for(lpBox,chars) in plates: 
     for(i, char) in enumerate(chars):
 
         char = detector.preprocessChar(char)
@@ -64,13 +57,13 @@ for(lpBox,chars) in plates:
             prediction = numModel.predict(features)[0]
 
         text += prediction.upper().decode('utf-8')
-        
-
+    justplate = lpd.PlateImage(lpBox, text)
+    
     print("For image, the plate is: {}".format(text))
 
 
 payload = {'placa': text,
-         'img': img}
+         'img': justplate}
 
 payload = json.dumps(payload)
 

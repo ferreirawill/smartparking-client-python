@@ -10,6 +10,7 @@ import cv2
 import sys
 
 
+
 command = argparse.ArgumentParser()
 command.add_argument("-i","--image", help="Imagens para deteccao")
 
@@ -28,19 +29,17 @@ desc = bbps(targetsize=(30,15), blocksizes=blockSizes)
 
 for imagePath in sorted(list(paths.list_images(dictio["image"]))):
     image = cv2.imread(imagePath)
-
+    lpd = detector(image,numchar=7)
 
     if image.shape[1] > 640:
         image = imutils.resize(image, width=640)
 
-    lpd = detector(image,numchar=7)
     plates = lpd.detecta()
 
     for(lpBox,chars) in plates:
-
-        lpBox = np.array(lpBox).reshape((-1,1,2)).astype(np.int32)
-
+        
         text = ""
+
 
         for(i, char) in enumerate(chars):
 
@@ -55,13 +54,17 @@ for imagePath in sorted(list(paths.list_images(dictio["image"]))):
                 prediction = numModel.predict(features)[0]
 
             text += prediction.upper().decode('utf-8')
+        
+        justplate = lpd.PlateImage(lpBox, text)
             
 
 
-            cv2.imshow("Character {}".format(i + 1), char)
+        #cv2.imshow("Character {}".format(i + 1), char)
+        
 
 
         cv2.imshow("Imagem",image)
+
         print("For image: {} , the plate is: {}".format((imagePath[imagePath.rfind("/") + 1:]),text))
         cv2.waitKey(0)
         cv2.destroyAllWindows()

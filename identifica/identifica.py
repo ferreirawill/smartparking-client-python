@@ -7,6 +7,7 @@ import numpy as np #Modulo de algebra linear do Python
 import cv2 #Modulo de processamento de imagem em python
 import imutils #Modulo para manipulacao de imagem em python
 
+
 # Define uma tupla nomeada "placa_regiao" com parametros relativos a placa
 # Semelhante a um struct c/c++, define um tipo de dados
 licence_plate = namedtuple("placa_regiao",["success", "plate", "thresh", "candidates"])
@@ -41,7 +42,7 @@ class detector:
                 # Chama metodo de corte de caracteres
                 chars = self.scissor(lp)
                 # retorna uma tupla a regiao e os caracteres
-                yield (reg, chars)
+                yield(reg, chars)
 
 
         #return self.detectaplacas()
@@ -117,6 +118,8 @@ class detector:
 
 
         return regions
+
+
 
     def detectcharcandidates(self, region):
         # Redimensiona a imagem aproximando a região da placa
@@ -231,6 +234,20 @@ class detector:
             chars.append(lp.thresh[startY:endY, startX:endX])
 
         return chars
+
+
+    def PlateImage(self, region, number):
+
+        cutted = perspective.four_point_transform(self.image, region)
+        cv2.imshow("PlateImage", imutils.resize(cutted, width= 400))
+        pathimage='/home/william/PycharmProjects/smartparking_webservice/src/media_files/'+ number +".png"
+        cv2.imwrite(pathimage,cutted)
+
+        print(pathimage)
+
+
+        return pathimage
+
 
     @staticmethod
     def preprocessChar(char):
