@@ -37,7 +37,6 @@ for imagePath in sorted(list(paths.list_images(dictio["image"]))):
     plates = lpd.detecta()
 
     for(lpBox,chars) in plates:
-        
         text = ""
 
 
@@ -54,18 +53,20 @@ for imagePath in sorted(list(paths.list_images(dictio["image"]))):
                 prediction = numModel.predict(features)[0]
 
             text += prediction.upper().decode('utf-8')
+            
+            #cv2.imshow("Character {}".format(i + 1), char)
         
         justplate = lpd.PlateImage(lpBox, text)
             
 
 
-        #cv2.imshow("Character {}".format(i + 1), char)
+        
         
 
 
         cv2.imshow("Imagem",image)
 
         print("For image: {} , the plate is: {}".format((imagePath[imagePath.rfind("/") + 1:]),text))
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 #'''

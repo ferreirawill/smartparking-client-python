@@ -19,8 +19,9 @@ licence_plate = namedtuple("placa_regiao",["success", "plate", "thresh", "candid
 # classe responsavel por detectar, extrair e reconhecer os caracteres da placa
 class detector:
     # Construtor da classe
-    ####################LARGMIN ERA 60 E ALTMIN ERA 20, ALTEREI PRA MOSTRA##############3
-    def __init__(self,image,largmin=120,altmin=40,numchar=7,largminchar=40):
+    ####################LARGMIN ERA 60 E ALTMIN ERA 20, ALTEREI PRA MOSTRA##############    
+    ####################LARGMIN ERA 60 E ALTMIN ERA 20, ALTEREI PRA MOSTRA LARG MIN 120 E ALTMIN 40##############
+    def __init__(self,image,largmin=60,altmin=20,numchar=7,largminchar=40):
         self.image = image     # Recebe a imagem 
         self.largmin = largmin # Recebe a largura minima da placa
         self.altmin = altmin   # Recebe a altura minima da placa 
@@ -51,13 +52,12 @@ class detector:
 # Metodo responsavel por detectar a placa em uma imagem
     def detectaplacas(self):
         # Cria um kernel retangular que deslizara pela imagem ate encontrar uma placa
-        ################### ALTEREI PRA MOSTRA. ERA (13,5) #################
-        rectKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (30, 10))
+        ################### ALTEREI PRA MOSTRA. ANTERIOR (13,5) | PARA MOSTRA:(30, 10) #################
+        rectKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (13, 5))
         # Cria kernel quadrado que limpara os ruidos na imagem
         squareKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
         # Cria lista com delimitação da placa
         regions = []
-        cv2.imshow("Imagem original",self.image)
         # Converte imagem para cinza 
         gray = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         #cv2.MORPH_BLACKHAT revela regiões mais escuras na imagem
@@ -97,7 +97,7 @@ class detector:
         thresh = cv2.bitwise_and(thresh, thresh, mask=light)
         thresh = cv2.dilate(thresh, None, iterations=2)
         thresh = cv2.erode(thresh, None, iterations=1)
-        cv2.imshow("finalizada", thresh) 
+        #cv2.imshow("finalizada", thresh) 
         
         # Encontra os contronos da imagem
         cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -117,7 +117,7 @@ class detector:
                 # Coloca as cordenadas da placa num array 
                 regions.append(box)
 
-        print(regions)
+        #print(regions)
         return regions
 
 
@@ -125,7 +125,7 @@ class detector:
     def detectcharcandidates(self, region):
         # Redimensiona a imagem aproximando a região da placa
         plate = perspective.four_point_transform(self.image, region)
-        cv2.imshow("Transformação de prespectiva", imutils.resize(plate, width= 640))
+        #cv2.imshow("Transformação de prespectiva", imutils.resize(plate, width= 640))
         
         # Extrai o componente V do espaço de cores HSV 
         V = cv2.split(cv2.cvtColor(plate, cv2.COLOR_BGR2HSV))[2]
@@ -240,14 +240,14 @@ class detector:
     def PlateImage(self, region, number):
 
         cutted = perspective.four_point_transform(self.image, region)
-        cv2.imshow("PlateImage", imutils.resize(cutted, width= 400))
+        cv2.imshow("Somente Placa", imutils.resize(cutted, width= 400))
         pathimage='/home/william/PycharmProjects/smartparking_webservice/src/media_files/'+ number +".png"
         cv2.imwrite(pathimage,cutted)
+        #print(pathimage)
+        imagesaved = number +".png"
 
-        print(pathimage)
 
-
-        return pathimage
+        return imagesaved
 
 
     @staticmethod

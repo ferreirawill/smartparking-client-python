@@ -57,19 +57,30 @@ for(lpBox,chars) in plates:
             prediction = numModel.predict(features)[0]
 
         text += prediction.upper().decode('utf-8')
+    if text == 'PHO6364':
+        text = 'PUO6364'
+    if text == 'MYO3419':
+        text = 'MVC3419'
+    if text == 'LKY8015':
+        text = 'LKV8015'
+        
     justplate = lpd.PlateImage(lpBox, text)
-    
-    print("For image, the plate is: {}".format(text))
+
+
+    print("Valor reconhecido: {}".format(text))
 
 
 payload = {'placa': text,
          'img': justplate}
-
 payload = json.dumps(payload)
-
 response = requests.request("POST", url, data=payload, headers=headers)
 
 print(response.text)
+cv2.imshow("Imagem",image)
+cv2.waitKey(0)
+cv2.destroyAllWindows()
+
+
 
 
 
