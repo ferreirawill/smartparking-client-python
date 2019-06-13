@@ -21,7 +21,7 @@ class detector:
     # Construtor da classe
     ####################LARGMIN ERA 60 E ALTMIN ERA 20, ALTEREI PRA MOSTRA##############    
     ####################LARGMIN ERA 60 E ALTMIN ERA 20, ALTEREI PRA MOSTRA LARG MIN 120 E ALTMIN 40##############
-    def __init__(self,image,largmin=60,altmin=20,numchar=7,largminchar=40):
+    def __init__(self,image,largmin=120,altmin=40,numchar=7,largminchar=40):
         self.image = image     # Recebe a imagem 
         self.largmin = largmin # Recebe a largura minima da placa
         self.altmin = altmin   # Recebe a altura minima da placa 
@@ -53,7 +53,7 @@ class detector:
     def detectaplacas(self):
         # Cria um kernel retangular que deslizara pela imagem ate encontrar uma placa
         ################### ALTEREI PRA MOSTRA. ANTERIOR (13,5) | PARA MOSTRA:(30, 10) #################
-        rectKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (13, 5))
+        rectKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (30, 10))
         # Cria kernel quadrado que limpara os ruidos na imagem
         squareKernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
         # Cria lista com delimitação da placa
@@ -243,7 +243,7 @@ class detector:
         cv2.imshow("Somente Placa", imutils.resize(cutted, width= 400))
         pathimage='/home/william/PycharmProjects/smartparking_webservice/src/media_files/'+ number +".png"
         cv2.imwrite(pathimage,cutted)
-        #print(pathimage)
+        print(pathimage)
         imagesaved = number +".png"
 
 
