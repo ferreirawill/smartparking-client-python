@@ -57,13 +57,7 @@ for(lpBox,chars) in plates:
             prediction = numModel.predict(features)[0]
 
         text += prediction.upper().decode('utf-8')
-    if text == 'PHO6364':
-        text = 'PUO6364'
-    if text == 'MYO3419':
-        text = 'MVC3419'
-    if text == 'LKY8015':
-        text = 'LKV8015'
-        
+
     justplate = lpd.PlateImage(lpBox, text)
 
 

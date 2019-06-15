@@ -8,11 +8,10 @@ import argparse
 import imutils
 import cv2
 import sys
-import requests #https://medium.com/aubergine-solutions/api-testing-using-postman-323670c89f6d 19:42
-import json #https://realpython.com/python-json/ 18:01 15/04/201
-import base64
+import requests 
+import json 
 import time
-
+from multiprocessing import Process
 
 headers = {
     'Content-Type': "application/json",
@@ -56,26 +55,32 @@ def recognizement(image):
             text += prediction.upper().decode('utf-8')
 
         #justplate = lpd.PlateImage(lpBox, text)
+        print(text)
+
+
     
-    if text == "":
-        pass
-    else:
-        if text[3:5] == '34':
-            text = 'MVC3419'
-            justplate = lpd.PlateImage(lpBox, text)
-            payload = {'placa': text,
-                'img': justplate}
-            payload = json.dumps(payload)
-            response = requests.request("POST", url, data=payload, headers=headers) 
-            print(response.text)
-        elif text[3:5] == '85':
-            text = 'VTY8573'
-            justplate = lpd.PlateImage(lpBox, text)
-            payload = {'placa': text,
-                'img': justplate}
-            payload = json.dumps(payload)
-            response = requests.request("POST", url, data=payload, headers=headers) 
-            print(response.text)
+
+count=0
+frame=0
+while True:
+    _, image = cap.read()
+    frame=frame + 1
+    count=count + 1
+    if image.shape[1] > 640:
+        image = imutils.resize(image, width=640)
+    if count > 10:
+        count=0
+        p = Process(target=recognizement,args=(image,))
+        p.start()
+        p.join()
+
+    cv2.imshow('Camera', image)
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('q'):
+        break
+cv2.destroyAllWindows()
+
+"""
         elif text[6:8] == '09':
             text = 'WILL2609'
             justplate = lpd.PlateImage(lpBox, text)
@@ -84,19 +89,5 @@ def recognizement(image):
             payload = json.dumps(payload)
             response = requests.request("POST", url, data=payload, headers=headers) 
             print(response.text)
-
-    
-
-while True:
-    _, image = cap.read()
- 
-    if image.shape[1] > 640:
-        image = imutils.resize(image, width=640)
-        
-    recognizement(image)
-    
-    cv2.imshow('Camera', image)
-    key = cv2.waitKey(1) & 0xFF
-    if key == ord('q'):
-        break
-cv2.destroyAllWindows()
+            
+"""
