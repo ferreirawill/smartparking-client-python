@@ -97,7 +97,7 @@ class detector:
         thresh = cv2.bitwise_and(thresh, thresh, mask=light)
         thresh = cv2.dilate(thresh, None, iterations=2)
         thresh = cv2.erode(thresh, None, iterations=1)
-        #cv2.imshow("finalizada", thresh) 
+        cv2.imshow("finalizada", thresh) 
         
         # Encontra os contronos da imagem
         cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -238,7 +238,12 @@ class detector:
 
 
     def PlateImage(self, region, number):
-
+        ## Identified
+        #imgtotrain='/home/william/PycharmProjects/smartparking_client/ToTrain/'+ number +".png"
+        #cv2.imshow("toTrain", imutils.resize(self.image, width= 400))
+        #cv2.imwrite(imgtotrain,self.image)
+        #print(imgtotrain)
+        ## Save to server
         cutted = perspective.four_point_transform(self.image, region)
         cv2.imshow("Somente Placa", imutils.resize(cutted, width= 400))
         pathimage='/home/william/PycharmProjects/smartparking_webservice/src/media_files/'+ number +".png"
