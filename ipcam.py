@@ -24,7 +24,8 @@ img = 'jhafqewuoh93r8h12093uawhflkwerh930hwewqehr'
 
 
 #cap = cv2.VideoCapture("http://admin:admin@192.168.0.29/cgi-bin/mjpg/video.cgi?&subtype=1")
-cap = cv2.VideoCapture('rtsp://admin:admin@192.168.0.7:554/cam/realmonitor?channel=1&subtype=0')
+#cap = cv2.VideoCapture('rtsp://admin:admin@192.168.0.7:554/cam/realmonitor?channel=1&subtype=0')
+cap = cv2.VideoCapture('rtsp://admin:admin@192.168.31.159:554/cam/realmonitor?channel=1&subtype=0')
 charModel_dire =  "charout/rechar.cpickle"
 #charModel_dire =  "/home/william/PycharmProjects/lpr_course/improving_classifier/output/adv_char.cpickle" 
 numModel_dire = "numout/renum.cpickle" 

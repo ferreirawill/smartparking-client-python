@@ -74,6 +74,7 @@ class detector:
         light = cv2.threshold(light, 50, 255, cv2.THRESH_BINARY)[1]
         #Aplica filtro de sobel para destacar o que não é preto no branco
         gradX = cv2.Sobel(blackhat, ddepth=cv2.CV_32F,dx=1,dy=0,ksize =-1)
+        #cv2.imshow("Sobel", gradX) 
         gradX = np.absolute(gradX)
         (minVal, maxVal) = (np.min(gradX), np.max(gradX))
         gradX = (255 * ((gradX - minVal) / (maxVal - minVal))).astype("uint8")
