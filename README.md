@@ -1,5 +1,10 @@
 # SmartParking Client
 
+Com a implementação do SmartParking na PUC Minas, almeja-se evitar que um mesmo
+usuário entre com vários veículos diferentes, use vagas destinadas a categorias de usuários com
+prioridade ou preferência e que pessoas não vinculadas a universidade usem o estacionamento
+enquanto realizando atividades fora do campus.
+
 ### 1. Links
 [Video de funcionamento do protótipo](http://drive.google.com/file/d/1aIxMbNOjwkYAFEuCUT0qV24dNa2lxC4y/view?usp=sharing "project video")  
 [Projeto SmartParking WebService](https://gitlab.com/Ferreira.will/smartparking_webservice "webservice side project")
