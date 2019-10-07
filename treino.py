@@ -53,7 +53,7 @@ for fontpath in paths.list_images(dictio["fonts"]):
 
 
 print("[INFO] Criando modelo de caracteres...")
-charmodel = LinearSVC(C=1.0,random_state=42,max_iter=1500)
+charmodel = LinearSVC(C=1.0,random_state=42)
 charmodel.fit(alphadata, alphalabel)
 
 print("[INFO] Finalizando modelo de caracteres...")
@@ -62,7 +62,7 @@ f.write(pickle.dumps(charmodel))
 f.close()
 
 print("[INFO] Criando modelo de numeros...")
-nummodel = LinearSVC(C=1.0,random_state=42, max_iter = 1500)
+nummodel = LinearSVC(C=1.0,random_state=42)
 nummodel.fit(numdata, numlabel)
 
 

@@ -1,28 +1,31 @@
-# SmartParking
+# SmartParking Client
 
-**_Projeto de um Sistema de Gestão de estacionamentos inteligente._**
-
-Passos para conclusão:
-
-- [x] Detecção da placa na imagem
-
-- [x] Indentificação dos Caracteres
-
-- [ ] Reconhecimento dos Caracteres
-
-- [ ] Obtenção da imagem via camera IP
-
-- [ ] Estrutura do banco de dados
-
-- [ ] Desenvolvimento Banco de dados
-
-- [ ] Código de reconhecimento com requisição no banco de dados
-
-- [ ] Template do WebServer
+### 1. Links
+[Video de funcionamento do protótipo](http://drive.google.com/file/d/1aIxMbNOjwkYAFEuCUT0qV24dNa2lxC4y/view?usp=sharing "project video")  
+[Projeto SmartParking WebService](https://gitlab.com/Ferreira.will/smartparking_webservice "webservice side project")
 
 
+### 2. Técnologias Utilizadas:
+*   Python
+*   Numpy
+*   Opencv
+*   Scikit-learn
+*   Scikit-image
+*   Requests
 
-# Ambiente de desenvolvimento
+### 3. Utilização
+
+Ative o ambiente de desenvolvimento e execute o cógido "***webclient***"
+
+```bash
+$sudo workon sm
+$python webclient.py
+```
+
+**Atenção:** O código só funcionará corretamente se o IP da câmera estiver de acordo com o escrito no código e o WebService precisa estar funcionando para receber as requisições.
+
+
+### 4. Ambiente de desenvolvimento
 
 Desenvolvimento na instalação mínima do SO **Ubuntu 18.04 LTS Bionic Beaver** utilizando **virtualenvwrapper 4.8.2** como ferramenta para manipulação de ambientes virtuais do **virtualenv**
 
@@ -37,47 +40,5 @@ Links:
 * PyCharm - Download: https://www.jetbrains.com/pycharm/download/
 * Visual Studio Code - Download: https://code.visualstudio.com/download
 
-# Relatório de atualização
 
-**11/01/2019** :arrow_right:
-Código de detecção de placas funcionando corretamente, é necessário definir como será posicionada a câmera que irá capturar a imagem ou melhorar a detecção para evitar alguns erros
-
-Os mínimo de módulos necessários são:
-```
-> imutils==0.5.2
-
-> numpy==1.15.4
-
-> Pillow==5.3.0
-
-> pytesseract==0.2.5
-
-> OpenCV == 3.4.1
-
-> scikit-image==0.14.1
-
-> scikit-learn==0.20.2
-```
-Para vizualizar os pacotes instalados no ambiente virtual, basta fazer:
-```
-pip freeze
-```
-
-**16/02/2019**  :arrow_right:
-Foi feito um downgrade na biblioteca scikit-learn para a versão 0.17. A versão mais atual (0.20.2) tem problemas para abrir os treinamentos e falhas na convergência dos cálculos.
-
-Para fazer downgrade foram utilizados os comandos:
-```
-$ pip uninstall scikit-learn
-$ pip install scikit-learn==0.17
-``` 
-Depois de instalada, para confirmar a instalação
-```
-$ python
-```
-
-```Python
->>> import sklearn
->>> sklearn.__version__
-0.17
-```
+**Documentação do ambiente ainda não foi finalizada**
